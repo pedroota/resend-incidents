@@ -7,6 +7,10 @@ import {
   CardHeader
 } from "@resend-incidents/ui/components/card"
 import { Icons } from "@resend-incidents/ui/components/icons"
+import {
+  getRegistrations,
+  registrationKeys
+} from "@/features/registrations/services/registration-service"
 import { authClient, authKeys, getSession } from "@/lib/auth-client"
 
 export const Route = createFileRoute("/")({
@@ -49,6 +53,15 @@ function Index() {
     queryKey: authKeys.session(),
     queryFn: getSession
   })
+  const registrations = useQuery({
+    queryKey: registrationKeys.all,
+    queryFn: getRegistrations
+  })
+
+  const isFull =
+    registrations.data !== undefined &&
+    registrations.data.registered >= registrations.data.limit
+
   const signIn = useMutation({
     mutationFn: async () => {
       const { error } = await authClient.signIn.social({
@@ -111,6 +124,20 @@ function Index() {
               <Icons.ArrowRight className="transition-transform group-hover:translate-x-0.5" />
             </Button>
           )}
+
+          {registrations.data ? (
+            <p className="text-center font-mono text-[11px] tracking-[0.15em] text-zinc-500 uppercase">
+              {registrations.data.registered} / {registrations.data.limit} spots
+              taken
+            </p>
+          ) : null}
+
+          {isFull && !session.data ? (
+            <p className="text-center text-sm leading-[1.85] text-muted-foreground">
+              Early access is full, so new accounts are closed for now. If you
+              already signed up, sign in as usual.
+            </p>
+          ) : null}
 
           {signIn.isError ? (
             <p className="text-center text-sm leading-[1.85] text-muted-foreground">

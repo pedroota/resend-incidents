@@ -1,4 +1,5 @@
 import { betterAuth } from "better-auth"
+import { APIError } from "better-auth/api"
 import { drizzleAdapter } from "better-auth/adapters/drizzle"
 import { database } from "@api/common/database"
 import {
@@ -9,6 +10,7 @@ import {
 } from "@api/common/database/schema"
 import { env } from "@api/common/env/environment"
 import { logger } from "@api/common/logger/client"
+import { registrationsService } from "@api/modules/registrations/services/registrations.service"
 
 export const auth = betterAuth({
   baseURL: env.API_URL,
@@ -48,6 +50,21 @@ export const auth = betterAuth({
   },
   account: {
     encryptOAuthTokens: true
+  },
+  databaseHooks: {
+    user: {
+      create: {
+        async before() {
+          const { isFull } = await registrationsService.getStatus()
+
+          if (isFull) {
+            throw new APIError("FORBIDDEN", {
+              message: "Registration limit reached"
+            })
+          }
+        }
+      }
+    }
   },
   advanced: {
     cookiePrefix: "resend-incidents",

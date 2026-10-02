@@ -9,6 +9,7 @@ const envSchema = z.object({
   DATABASE_URL: z.url(),
   REDIS_URL: z.url().startsWith("redis://"),
   API_URL: z.url(),
+  MAX_USERS: z.coerce.number().int().positive().default(20),
   WEBHOOK_BASE_URL: z.url().optional(),
   WEB_URL: z.url(),
   COOKIE_SECRET: z.string().min(32),
