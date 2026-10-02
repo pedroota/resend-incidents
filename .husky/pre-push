@@ -1,0 +1,12 @@
+# Block push if npm/pnpm/yarn lockfiles exist (project uses Bun only)
+FORBIDDEN=$(find . -type f \( -name "package-lock.json" -o -name "pnpm-lock.yaml" -o -name "yarn.lock" \) -not -path "*/node_modules/*" 2>/dev/null)
+if [ -n "$FORBIDDEN" ]; then
+  echo ""
+  echo "Error: This project uses Bun only. Remove the following lockfiles:"
+  echo "$FORBIDDEN" | sed 's/^/  /'
+  echo ""
+  echo "Use 'bun install' instead of npm/pnpm/yarn."
+  exit 1
+fi
+
+bun run dependencies:check

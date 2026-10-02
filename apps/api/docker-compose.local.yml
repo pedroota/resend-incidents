@@ -1,0 +1,41 @@
+name: resend-incidents
+
+services:
+  postgres:
+    image: postgres:18-alpine
+    container_name: resend-incidents-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: resend_incidents
+      POSTGRES_PASSWORD: resend_incidents_dev_password
+      POSTGRES_DB: resend_incidents
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U resend_incidents -d resend_incidents"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:8-alpine
+    container_name: resend-incidents-redis
+    restart: unless-stopped
+    command: ["redis-server", "--maxmemory-policy", "noeviction"]
+    ports:
+      - "6380:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  postgres_data:
+    driver: local
+  redis_data:
+    driver: local

@@ -1,0 +1,20 @@
+{
+  "$schema": "https://unpkg.com/syncpack@15.3.2/dist/config.schema.json",
+  "versionGroups": [
+    {
+      "label": "Ignore workspace protocol for internal packages",
+      "dependencies": ["@resend-incidents/**"],
+      "dependencyTypes": ["prod", "dev", "peer"],
+      "packages": ["**"],
+      "pinVersion": "workspace:*"
+    }
+  ],
+  "semverGroups": [
+    {
+      "label": "Use workspace protocol for internal packages",
+      "dependencies": ["@resend-incidents/**"],
+      "packages": ["**"],
+      "range": ""
+    }
+  ]
+}

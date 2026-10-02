@@ -1,0 +1,54 @@
+{
+  "name": "resend-incidents",
+  "version": "0.0.1",
+  "private": true,
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "type": "module",
+  "scripts": {
+    "dev": "bun run --filter '*' dev",
+    "dev:api": "bun run --filter @resend-incidents/api dev",
+    "dev:web": "bun run --filter @resend-incidents/web dev",
+    "build": "bun run --filter '*' build",
+    "typecheck": "bun run --filter '*' typecheck",
+    "format": "oxfmt --write",
+    "format:check": "oxfmt --check",
+    "lint": "oxlint",
+    "lint:fix": "oxlint --fix",
+    "dependencies:check": "syncpack lint",
+    "knip": "knip",
+    "prepare": "husky"
+  },
+  "devDependencies": {
+    "@oxlint/plugins": "1.78.0",
+    "@types/bun": "1.4.2",
+    "husky": "9.1.7",
+    "knip": "6.25.0",
+    "lint-staged": "17.0.8",
+    "oxfmt": "0.63.0",
+    "oxlint": "1.78.0",
+    "oxlint-tailwindcss": "1.14.0",
+    "syncpack": "15.3.2",
+    "typescript": "7.0.2"
+  },
+  "lint-staged": {
+    "**/*.{ts,tsx,js,jsx,json,jsonc}": [
+      "oxfmt --write --no-error-on-unmatched-pattern"
+    ],
+    "**/*.{ts,tsx,js,jsx}": [
+      "oxlint --fix"
+    ],
+    "apps/api/**/*.{ts,tsx}": [
+      "bash -c 'bun run --filter=@resend-incidents/api typecheck'"
+    ],
+    "apps/web/**/*.{ts,tsx}": [
+      "bash -c 'bun run --filter=@resend-incidents/web typecheck'"
+    ],
+    "packages/**/*.{ts,tsx}": [
+      "bash -c 'bun run --filter=./packages/* --if-present --elide-lines=0 typecheck'"
+    ]
+  },
+  "packageManager": "bun@1.4.2"
+}

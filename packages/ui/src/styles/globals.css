@@ -1,0 +1,73 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@source "../../../../apps/**/*.{ts,tsx}";
+@source "../**/*.{ts,tsx}";
+
+@custom-variant dark (&:is(.dark *));
+
+/* The app is dark-only, following Resend's branding: white on black. */
+:root {
+  --radius: 0.75rem;
+  --background: #000000;
+  --foreground: #ffffff;
+  --card: rgb(255 255 255 / 0.02);
+  --card-foreground: var(--color-zinc-400);
+  --popover: var(--color-zinc-950);
+  --popover-foreground: #ffffff;
+  --primary: #ffffff;
+  --primary-foreground: #000000;
+  --secondary: rgb(255 255 255 / 0.04);
+  --secondary-foreground: var(--color-zinc-200);
+  --muted: rgb(255 255 255 / 0.03);
+  --muted-foreground: var(--color-zinc-500);
+  --accent: rgb(255 255 255 / 0.07);
+  --accent-foreground: #ffffff;
+  --destructive: var(--color-red-400);
+  --border: rgb(255 255 255 / 0.06);
+  --input: rgb(255 255 255 / 0.1);
+  --ring: var(--color-zinc-500);
+}
+
+@theme inline {
+  --font-sans: "Geist", Arial, Helvetica, sans-serif;
+  --font-mono: "Geist Mono", ui-monospace, monospace;
+
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background font-sans text-foreground antialiased;
+  }
+  /* Tailwind v4 dropped the pointer cursor on buttons. */
+  button:not(:disabled),
+  [role="button"]:not(:disabled) {
+    cursor: pointer;
+  }
+}
