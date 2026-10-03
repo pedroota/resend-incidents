@@ -11,8 +11,8 @@
     "db:generate": "bun --bun drizzle-kit generate",
     "db:migrate": "bun run src/common/database/migrate.ts",
     "db:studio": "bun --bun drizzle-kit studio",
-    "db:wipe": "bun src/scripts/wipe-database.ts",
-    "simulate:bounce-spike": "bun src/scripts/simulate-bounce-spike.ts"
+    "db:wipe": "dotenv run -f .env -q -- bun src/scripts/wipe-database.ts",
+    "simulate:bounce-spike": "dotenv run -f .env -q -- bun src/scripts/simulate-bounce-spike.ts"
   },
   "dependencies": {
     "@elysiajs/cors": "1.4.2",
@@ -28,6 +28,7 @@
   },
   "devDependencies": {
     "@types/pg": "8.20.0",
+    "dotenv": "18.0.5",
     "drizzle-kit": "0.31.10"
   }
 }
