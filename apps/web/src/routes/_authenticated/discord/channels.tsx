@@ -1,4 +1,4 @@
-import { useMutation, useSuspenseQuery } from "@tanstack/react-query"
+import { useMutation, useQuery, useSuspenseQuery } from "@tanstack/react-query"
 import {
   createFileRoute,
   type ErrorComponentProps,
@@ -11,6 +11,7 @@ import { Icons } from "@resend-incidents/ui/components/icons"
 import {
   addDiscordDestination,
   destinationKeys,
+  listDestinations,
   listDiscordChannels
 } from "@/features/destinations/services/destination-service"
 import { apiErrorCode, knownApiErrorCode } from "@/lib/http-client"
@@ -39,8 +40,13 @@ function DiscordChannels() {
     queryKey: destinationKeys.discordChannels(),
     queryFn: listDiscordChannels
   })
+  const destinations = useQuery({
+    queryKey: destinationKeys.list(),
+    queryFn: listDestinations
+  })
   const { queryClient } = Route.useRouteContext()
   const navigate = useNavigate()
+  const currentChannelId = destinations.data?.destinations[0]?.channelId
 
   const addDestination = useMutation({
     mutationFn: addDiscordDestination,
@@ -88,7 +94,14 @@ function DiscordChannels() {
                       <Icons.Hash className="size-3.5 text-zinc-600" />
                       {channel.name}
                     </span>
-                    <Icons.ArrowRight className="size-4 text-zinc-600 transition-transform group-hover:translate-x-0.5" />
+                    {channel.id === currentChannelId ? (
+                      <span className="flex items-center gap-1.5 font-mono text-[11px] tracking-[0.15em] text-zinc-500 uppercase">
+                        <Icons.Check className="size-3.5" />
+                        Current
+                      </span>
+                    ) : (
+                      <Icons.ArrowRight className="size-4 text-zinc-600 transition-transform group-hover:translate-x-0.5" />
+                    )}
                   </button>
                 </li>
               ))}

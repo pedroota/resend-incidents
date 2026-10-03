@@ -3,6 +3,7 @@ import { useMutation, useQuery, useSuspenseQuery } from "@tanstack/react-query"
 import {
   createFileRoute,
   type ErrorComponentProps,
+  Link,
   useRouter
 } from "@tanstack/react-router"
 import { Button } from "@resend-incidents/ui/components/button"
@@ -213,9 +214,15 @@ function Connected() {
               {destinations.data.destinations.map((destination) => (
                 <li
                   key={destination.id}
-                  className="px-5 py-4 font-mono text-[13px]"
+                  className="flex items-center justify-between px-5 py-4 text-[13px]"
                 >
-                  {destination.name}
+                  <span className="font-mono">{destination.name}</span>
+                  <Link
+                    to="/discord/channels"
+                    className="font-mono text-[11px] tracking-[0.15em] text-zinc-600 uppercase transition-colors hover:text-zinc-300"
+                  >
+                    Change
+                  </Link>
                 </li>
               ))}
             </ul>

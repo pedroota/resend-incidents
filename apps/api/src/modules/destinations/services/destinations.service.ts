@@ -105,7 +105,7 @@ async function addDiscord(
     return { success: false, error: "channel_not_found" }
   }
 
-  const destination = await destinationsRepository.upsert({
+  const destination = await destinationsRepository.replace({
     installationId,
     name: `#${channel.name}`,
     guildId: guildChannels.guild.id,
@@ -113,10 +113,10 @@ async function addDiscord(
   })
 
   if (!destination) {
-    throw new Error("Destination upsert returned no data")
+    throw new Error("Destination replace returned no data")
   }
 
-  logger.info("Discord destination added", {
+  logger.info("Discord destination set", {
     installationId,
     destinationId: destination.id
   })

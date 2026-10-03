@@ -1,7 +1,7 @@
-import { and, asc, eq } from "drizzle-orm"
+import { and, asc, eq, ne } from "drizzle-orm"
 import { database } from "@api/common/database"
-import { destinations } from "@api/common/database/schema"
-import type { UpsertDestination } from "@api/modules/destinations/types/destinations.repository.types"
+import { destinations, installations } from "@api/common/database/schema"
+import type { ReplaceDestination } from "@api/modules/destinations/types/destinations.repository.types"
 
 async function list(installationId: string) {
   return database
@@ -34,22 +34,40 @@ async function listIds(installationId: string) {
   return installationDestinations.map(({ id }) => id)
 }
 
-async function upsert(values: UpsertDestination) {
-  const [destination] = await database
-    .insert(destinations)
-    .values(values)
-    .onConflictDoUpdate({
-      target: [destinations.installationId, destinations.channelId],
-      set: { name: values.name, updatedAt: new Date() }
-    })
-    .returning()
+// Ensures each installation has a single destination, deleting others and serializing concurrent updates with a row lock.
+async function replace(values: ReplaceDestination) {
+  return database.transaction(async (tx) => {
+    await tx
+      .select({ id: installations.id })
+      .from(installations)
+      .where(eq(installations.id, values.installationId))
+      .for("update")
 
-  return destination ?? null
+    await tx
+      .delete(destinations)
+      .where(
+        and(
+          eq(destinations.installationId, values.installationId),
+          ne(destinations.channelId, values.channelId)
+        )
+      )
+
+    const [destination] = await tx
+      .insert(destinations)
+      .values(values)
+      .onConflictDoUpdate({
+        target: [destinations.installationId, destinations.channelId],
+        set: { name: values.name, updatedAt: new Date() }
+      })
+      .returning()
+
+    return destination ?? null
+  })
 }
 
 export const destinationsRepository = {
   list,
   find,
   listIds,
-  upsert
+  replace
 }
