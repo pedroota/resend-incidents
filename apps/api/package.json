@@ -11,6 +11,7 @@
     "db:generate": "bun --bun drizzle-kit generate",
     "db:migrate": "bun run src/common/database/migrate.ts",
     "db:studio": "bun --bun drizzle-kit studio",
+    "db:wipe": "bun src/scripts/wipe-database.ts",
     "simulate:bounce-spike": "bun src/scripts/simulate-bounce-spike.ts"
   },
   "dependencies": {
