@@ -1,4 +1,5 @@
 import type { AnyElysia } from "elysia"
+import { backofficeController } from "./backoffice/controllers/backoffice.controller"
 import { destinationsController } from "./destinations/controllers/destinations.controller"
 import { discordController } from "./discord/controllers/discord.controller"
 import { discordOauthController } from "./discord/controllers/discord-oauth.controller"
@@ -22,5 +23,6 @@ export const apiRoutes = buildApiRoutes(
   discordController,
   destinationsController,
   installationWebhookController,
-  resendWebhookReceiverController
+  resendWebhookReceiverController,
+  backofficeController
 )

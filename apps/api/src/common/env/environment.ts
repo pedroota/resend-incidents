@@ -12,6 +12,7 @@ const envSchema = z.object({
   MAX_USERS: z.coerce.number().int().positive().default(20),
   WEBHOOK_BASE_URL: z.url().optional(),
   WEB_URL: z.url(),
+  BACKOFFICE_API_KEY: z.string().min(32).optional(),
   COOKIE_SECRET: z.string().min(32),
   AUTH_SECRET: z.string().min(32),
   GITHUB_CLIENT_ID: z.string().min(1),
