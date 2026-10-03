@@ -15,9 +15,19 @@ const client = new SQL({
     }
   },
   onclose: (error) => {
-    if (error) {
-      logger.error("PostgreSQL connection closed with error", { error })
+    if (!error) {
+      return
     }
+
+    if (
+      error instanceof SQL.PostgresError &&
+      error.code === "ERR_POSTGRES_IDLE_TIMEOUT"
+    ) {
+      logger.debug("PostgreSQL idle connection recycled")
+      return
+    }
+
+    logger.error("PostgreSQL connection closed with error", { error })
   }
 })
 
